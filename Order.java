@@ -7,4 +7,8 @@ public class Order {
         this.productName = productName;
         this.quantity = quantity;
     }
+
+    public String toString() {
+        return "CustomerId: " + this.customerId + " | ProductName: " + this.productName + " | Quantity: " + this.quantity;
+    }
 }

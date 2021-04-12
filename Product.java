@@ -9,4 +9,8 @@ public class Product {
         this.restockRate = restockRate;
         this.restockQuantity = restockQuantity;
     }
+
+    public String toString() {
+        return "Product: " + this.name + " | Quantity: " + this.quantity + " | RestockRate: " + this.restockRate + " | RestockQuantity: " + this.restockQuantity;
+    }
 }
