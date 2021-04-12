@@ -15,8 +15,8 @@ public class DataStorage {
         ProductList.put(productName, product);
     }
 
-    public void addOrder(int customerId, String productName, int quantity) {
-        Order order = new Order(customerId, productName, quantity);
+    public void addOrder(int customerId, String productName, int quantity, int time) {
+        Order order = new Order(customerId, productName, quantity, time);
         OrderList.put(customerId, order);
     }
 
@@ -24,7 +24,7 @@ public class DataStorage {
         String products = "";
         for(Map.Entry<String, Product> entry : ProductList.entrySet()) {
             String product = this.displayProduct(entry.getKey());
-            products += "\n" + product;
+            products += product + "\n";
             
         }
         return products;

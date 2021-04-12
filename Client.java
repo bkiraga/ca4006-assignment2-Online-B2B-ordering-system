@@ -22,4 +22,15 @@ public class Client {
         }
         return result;
     }
+
+    public String getProducts() {
+        String products = null;
+        try {
+            products = server.getProducts();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not connect to server");
+        }
+        return products;
+    }
 }

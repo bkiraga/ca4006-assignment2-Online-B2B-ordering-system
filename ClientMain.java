@@ -11,12 +11,12 @@ public class ClientMain {
         while(true) {
             System.out.println("Input command >");
             String command = in.nextLine();
-            String availability = null;
+            String products = null;
             if(command.equalsIgnoreCase("exit")) break;
-            if(command.equalsIgnoreCase("checkavailability")) {
+            if(command.equalsIgnoreCase("getproducts")) {
                 try {
-                    availability = client.toUpperCase(command);
-                    System.out.println("Availability > " + availability);
+                    products = client.getProducts();
+                    System.out.println("Products: > " + "\n" + products);
                 } catch(Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
