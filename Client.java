@@ -5,6 +5,7 @@ import java.rmi.registry.Registry;
 
 public class Client {
     private ServerInterface server;
+    int customerId;
     public Client() {}
 
     public void startClient() throws RemoteException, NotBoundException {
@@ -12,15 +13,15 @@ public class Client {
         server = (ServerInterface)registry.lookup("Server");
     }
 
-    public String toUpperCase(String argument) {
-        String result = null;
+    public String login(int customerId) {
+        String response = null;
         try {
-            result = server.toUpperCase(argument);
-        } catch (RemoteException e) {
+            response = server.login(customerId);
+        } catch(RemoteException e) {
             e.printStackTrace();
             throw new RuntimeException("Could not connect to server");
         }
-        return result;
+        return response;
     }
 
     public String getProducts() {
@@ -33,4 +34,15 @@ public class Client {
         }
         return products;
     }
+
+    // public int getCustomer() {
+    //     int customer = 0;
+    //     try {
+    //         customer = server.getCustomer();
+    //     } catch (RemoteException e) {
+    //         e.printStackTrace();
+    //         throw new RuntimeException("Could not connect to server");
+    //     }
+    //     return customer;
+    // }
 }

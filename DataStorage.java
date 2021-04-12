@@ -1,28 +1,32 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList; 
 
 public class DataStorage {
-    HashMap<String, Product> ProductList;
-    HashMap<Integer, Order> OrderList;
+    HashMap<String, Product> productList;
+    HashMap<Integer, Order> orderList;
+    // HashMap<Integer, ArrayList<Order>> customerOrderList;
 
     public DataStorage() {
-        ProductList = new HashMap<String, Product>();
-        OrderList = new HashMap<Integer, Order>();
+        productList = new HashMap<String, Product>();
+        orderList = new HashMap<Integer, Order>();
+        // customerOrderList = new HashMap<Integer, ArrayList<Order>>();
     }
 
     public void addProduct(String productName, int quantity, int restockRate, int restockQuantity) {
         Product product  = new Product(productName, quantity, restockRate, restockQuantity);
-        ProductList.put(productName, product);
+        productList.put(productName, product);
     }
 
     public void addOrder(int customerId, String productName, int quantity, int time) {
         Order order = new Order(customerId, productName, quantity, time);
-        OrderList.put(customerId, order);
+        orderList.put(order.orderId, order);
+        // customerOrderList.put(customerId, order);
     }
 
     public String displayAllProducts() {
         String products = "";
-        for(Map.Entry<String, Product> entry : ProductList.entrySet()) {
+        for(Map.Entry<String, Product> entry : productList.entrySet()) {
             String product = this.displayProduct(entry.getKey());
             products += product + "\n";
             
@@ -31,10 +35,20 @@ public class DataStorage {
     }
 
     public String displayProduct(String productName) {
-        return ProductList.get(productName).toString();
+        return productList.get(productName).toString();
     }
 
-    public String displayOrders() {
-        return "";
+    public String displayOrder(int orderId) {
+        return orderList.get(orderId).toString();
+    }
+
+    public String displayAllOrders() {
+        String orders = "";
+        for(Map.Entry<Integer, Order> entry : orderList.entrySet()) {
+            String order = this.displayOrder(entry.getKey());
+            orders += order + "\n";
+            
+        }
+        return orders;
     }
 }

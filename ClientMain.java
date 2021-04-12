@@ -12,7 +12,21 @@ public class ClientMain {
             System.out.println("Input command >");
             String command = in.nextLine();
             String products = null;
-            if(command.equalsIgnoreCase("exit")) break;
+            // int customer = 0;
+            if(command.equalsIgnoreCase("exit")) {
+                break;
+            }
+            if(command.matches("^login [0-9]{4}$")) { //login {4 digits}
+                try {
+                    // System.out.println(command);
+                    int customerId = Integer.parseInt(command.split(" ")[1]);
+                    // System.out.println(id);
+                    String response = client.login(customerId);
+                    System.out.println(response);
+                } catch(Exception e) {
+                    System.out.print("Error: " + e.getMessage());
+                }
+            }
             if(command.equalsIgnoreCase("getproducts")) {
                 try {
                     products = client.getProducts();
@@ -20,15 +34,16 @@ public class ClientMain {
                 } catch(Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
-
             }
-            // String result = null;
-            // try {
-            //     result = client.toUpperCase(command);
-            // } catch(Exception e) {
-            //     System.out.println("Error: " + e.getMessage());
+            // if(command.equalsIgnoreCase("customer")) {
+            //     try {
+            //         customer = client.getCustomer();
+            //         System.out.println(customer);
+            //     } catch(Exception e) {
+            //         System.out.println("Error: " + e.getMessage());
+            //     }
             // }
-            // System.out.println("Result > " + result);
         }
+        in.close();
     }
 }
