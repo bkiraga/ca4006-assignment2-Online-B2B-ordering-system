@@ -68,6 +68,7 @@ public class Client {
             e.printStackTrace();
             throw new RuntimeException("Could not connect to server");
         }
+        return orders;
     }
 
     public String cancelOrder(int orderId) {
