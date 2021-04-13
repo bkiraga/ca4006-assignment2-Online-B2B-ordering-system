@@ -17,6 +17,7 @@ public class Client {
         String response = null;
         try {
             response = server.login(customerId);
+            this.customerId = customerId;
         } catch(RemoteException e) {
             e.printStackTrace();
             throw new RuntimeException("Could not connect to server");
@@ -35,14 +36,15 @@ public class Client {
         return products;
     }
 
-    // public int getCustomer() {
-    //     int customer = 0;
-    //     try {
-    //         customer = server.getCustomer();
-    //     } catch (RemoteException e) {
-    //         e.printStackTrace();
-    //         throw new RuntimeException("Could not connect to server");
-    //     }
-    //     return customer;
-    // }
+    public String order(String productName, int orderQuantity, int orderTime) {
+        int customerId = this.customerId;
+        String order = null;
+        try {
+            order = server.order(customerId, productName, orderQuantity, orderTime);
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not connect to server");
+        }
+        return order;
+    }
 }

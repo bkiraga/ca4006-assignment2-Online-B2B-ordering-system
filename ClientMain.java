@@ -12,6 +12,7 @@ public class ClientMain {
             System.out.println("Input command >");
             String command = in.nextLine();
             String products = null;
+            String order = null;
             // int customer = 0;
             if(command.equalsIgnoreCase("exit")) {
                 break;
@@ -35,14 +36,19 @@ public class ClientMain {
                     System.out.println("Error: " + e.getMessage());
                 }
             }
-            // if(command.equalsIgnoreCase("customer")) {
-            //     try {
-            //         customer = client.getCustomer();
-            //         System.out.println(customer);
-            //     } catch(Exception e) {
-            //         System.out.println("Error: " + e.getMessage());
-            //     }
-            // }
+            if(command.matches("^order \\D+ \\d+ \\d+$")) {
+                try {
+                    String productName = command.split(" ")[1];
+                    int orderQuantity = Integer.parseInt(command.split(" ")[2]);
+                    int orderTime = Integer.parseInt(command.split(" ")[3]);
+                    String orderResponse = client.order(productName, orderQuantity, orderTime);
+                    System.out.println(orderResponse);
+                } catch (Exception e) {
+                    System.out.println("Error " + e.getMessage());
+                }
+            }
+
+            //need get my orders method
         }
         in.close();
     }
