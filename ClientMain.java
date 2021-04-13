@@ -13,15 +13,12 @@ public class ClientMain {
             String command = in.nextLine();
             String products = null;
             String myOrders = null;
-            // int customer = 0;
             if(command.equalsIgnoreCase("exit")) {
                 break;
             }
             if(command.matches("^login [0-9]{4}$")) { //login {4 digits}
                 try {
-                    // System.out.println(command);
                     int customerId = Integer.parseInt(command.split(" ")[1]);
-                    // System.out.println(id);
                     String response = client.login(customerId);
                     System.out.println(response);
                 } catch(Exception e) {

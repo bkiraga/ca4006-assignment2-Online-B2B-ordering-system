@@ -64,6 +64,9 @@ public class Client {
         String orders = null;
         try {
             orders = server.getOrders(customerId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not connect to server");
         }
     }
 
