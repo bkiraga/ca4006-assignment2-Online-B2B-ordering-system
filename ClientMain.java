@@ -12,7 +12,7 @@ public class ClientMain {
             System.out.println("Input command >");
             String command = in.nextLine();
             String products = null;
-            String order = null;
+            String myOrders = null;
             // int customer = 0;
             if(command.equalsIgnoreCase("exit")) {
                 break;
@@ -47,8 +47,33 @@ public class ClientMain {
                     System.out.println("Error " + e.getMessage());
                 }
             }
-
-            //need get my orders method
+            if(command.matches("^availability \\D+ \\d+$")) {
+                try {
+                    String productName = command.split(" ")[1];
+                    int time = Integer.parseInt(command.split(" ")[2]);
+                    String response = client.checkAvailability(productName, time);
+                    System.out.println(response);
+                } catch(Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+            }
+            if(command.equalsIgnoreCase("myorders")) {
+                try {
+                    myOrders = client.getOrders();
+                    System.out.println(myOrders); 
+                } catch(Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+            }
+            if(command.matches("^cancel \\d+$")) {
+                try {
+                    int orderId = Integer.parseInt(command.split(" ")[1]);
+                    String response = client.cancelOrder(orderId);
+                    System.out.println(response);
+                } catch(Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+            }
         }
         in.close();
     }

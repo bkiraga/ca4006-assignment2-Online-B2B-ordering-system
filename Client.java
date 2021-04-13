@@ -47,4 +47,35 @@ public class Client {
         }
         return order;
     }
+
+    public String checkAvailability(String productName, int time) {
+        String availability = null;
+        try {
+            availability = server.checkAvailability(productName, time);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not connect to server");
+        }
+        return availability;
+    }
+
+    public String getOrders() {
+        int customerId = this.customerId;
+        String orders = null;
+        try {
+            orders = server.getOrders(customerId);
+        }
+    }
+
+    public String cancelOrder(int orderId) {
+        String response = null;
+        try {
+            response = server.cancelOrder(orderId);
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not connect to server");
+        }
+        return response;
+    }
+
 }
