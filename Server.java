@@ -31,6 +31,7 @@ public class Server implements ServerInterface {
     public String order(int customerId, String productName, int orderQuantity, int orderTime) {
         //find if id exists on the hashmap
         //check if product exists check if quantity is possible at given time
+        dataStorage.addOrder(customerId, productName, orderQuantity, orderTime);
         return "order successfull";
     }
 

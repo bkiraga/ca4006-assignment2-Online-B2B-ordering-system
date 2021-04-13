@@ -5,12 +5,12 @@ import java.util.ArrayList;
 public class DataStorage {
     HashMap<String, Product> productList;
     HashMap<Integer, Order> orderList;
-    // HashMap<Integer, ArrayList<Order>> customerOrderList;
+    HashMap<Integer, ArrayList<Order>> customerOrderList;
 
     public DataStorage() {
         productList = new HashMap<String, Product>();
         orderList = new HashMap<Integer, Order>();
-        // customerOrderList = new HashMap<Integer, ArrayList<Order>>();
+        customerOrderList = new HashMap<Integer, ArrayList<Order>>();
     }
 
     public void addProduct(String productName, int quantity, int restockRate, int restockQuantity) {
@@ -21,7 +21,16 @@ public class DataStorage {
     public void addOrder(int customerId, String productName, int quantity, int time) {
         Order order = new Order(customerId, productName, quantity, time);
         orderList.put(order.orderId, order);
-        // customerOrderList.put(customerId, order);
+        ArrayList<Order> customerOrders;
+        if(customerOrderList.containsKey(customerId)) {
+            customerOrders = customerOrderList.get(customerId);
+            customerOrders.add(order);
+            customerOrderList.put(customerId, customerOrders);
+        } else {
+            customerOrders = new ArrayList<Order>();
+            customerOrders.add(order);
+            customerOrderList.put(customerId, customerOrders);
+        }
     }
 
     public String displayAllProducts() {
