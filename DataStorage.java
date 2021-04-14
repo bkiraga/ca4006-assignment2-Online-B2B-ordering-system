@@ -1,17 +1,19 @@
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList; 
+import java.util.Date;
 
 public class DataStorage {
     HashMap<String, Product> productList;
     HashMap<Integer, Order> orderList;
     HashMap<Integer, ArrayList<Order>> customerOrderList;
+    HashMap<String, ArrayList<Order>> orderListByProduct;
 
     public DataStorage() {
         productList = new HashMap<String, Product>();
         orderList = new HashMap<Integer, Order>();
         customerOrderList = new HashMap<Integer, ArrayList<Order>>();
-        // orderListByProduct = new HashMap<String>();
+        orderListByProduct = new HashMap<String, ArrayList<Order>>();
     }
 
     public void addProduct(String productName, int quantity, int restockRate, int restockQuantity) {
@@ -20,8 +22,8 @@ public class DataStorage {
     }
 
     public String addOrder(int customerId, String productName, int quantity, int time) {
-        String response = null;
-        if(productList.containsKey(productName)) {
+        // String response = null;
+        if(productList.containsKey(productName) && (availableProductNumber(productName, time) > 0)) {
             Order order = new Order(customerId, productName, quantity, time);
             orderList.put(order.orderId, order);
             ArrayList<Order> customerOrders;
@@ -34,20 +36,41 @@ public class DataStorage {
                 customerOrders.add(order);
                 customerOrderList.put(customerId, customerOrders);
             }
-            return response;
+            ArrayList<Order> productOrders;
+            if(orderListByProduct.containsKey(productName)) {
+                productOrders = orderListByProduct.get(productName);
+                productOrders.add(order);
+                orderListByProduct.put(productName, productOrders);
+            } else {
+                productOrders = new ArrayList<Order>();
+                productOrders.add(order);
+                orderListByProduct.put(productName, productOrders);
+            }
+            return "Order Placed";
         } else {
-            response = "Cannot process order";
-            return response;
+            return "Cannot process order";
         }
     }
 
-    public int availableProductNumber(String productName, int quantity, int time) {
+    public int availableProductNumber(String productName, int time) {
         Product product = productList.get(productName);
-        int restockAmount = (time / 30) * product.restockRate;
-        int quantityWithRestocks = product.quantity + (product.restockQuantity * restockAmount);
-        // int productsOrdered = orderListByProduct.get(productName);
-        return 0;
+        Date now = new Date();      
+        Long currentTimeSec = now.getTime()/1000;
+        int currentTime = currentTimeSec.intValue()/60;
+        int timeDifferenceDays = (time - currentTime)/60/24;
+        int restockAmount = (timeDifferenceDays / 30) * product.restockQuantity;
+        int productOrderTotal = 0;
+        if(orderListByProduct.containsKey(productName)) {
+            ArrayList<Order> productOrders = orderListByProduct.get(productName);
+            for(int i = 0; i < productOrders.size(); i++){
+                if(productOrders.get(i).time < time) {
+                    productOrderTotal += productOrders.get(i).quantity;
+                }
+            }
+        }
+        return product.quantity + restockAmount - productOrderTotal;
     }
+
 
     public String displayAllProducts() {
         String products = "";

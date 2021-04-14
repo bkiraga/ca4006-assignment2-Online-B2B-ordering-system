@@ -60,12 +60,13 @@ public class ClientMain {
                     System.out.println("Error " + e.getMessage());
                 }
             }
-            if(command.matches("^availability \\D+ \\d+$")) {
+            if(command.matches("^availability \\D+ ([0-1][0-9]|[2][0-3]):[0-5][0-9]\\/(([0][1-9]|[1][0-9]|[2][0-8])\\/[0][2]|([0][1-9]|[1-2][1-9]|[3][0])\\/([0][4]|[0][6]|[0][9]|[1][1])|([0][1-9]|[1-2][1-9]|[3][0-1])\\/([0][1]|[0][3]|[0][5]|[0][7]|[0][8]|[1][0]|[1][2]))\\/[2][1-9]$")) {
                 try {
                     String productName = command.split(" ")[1];
-                    int time = Integer.parseInt(command.split(" ")[2]);
-                    String response = client.checkAvailability(productName, time);
-                    System.out.println(response);
+                    String timeStr = command.split(" ")[2];
+                    int orderTime = convertTimeStrToUnix(timeStr);
+                    int productAvailability = client.checkAvailability(productName, orderTime);
+                    System.out.println(productName + ": " + productAvailability + " available at: " + timeStr);
                 } catch(Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }

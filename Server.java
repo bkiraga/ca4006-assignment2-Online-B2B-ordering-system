@@ -36,17 +36,17 @@ public class Server implements ServerInterface {
     }
 
     @Override
-    public String checkAvailability(String productName, int time) {
-        return "";
+    public int checkAvailability(String productName, int time) {
+        return dataStorage.availableProductNumber(productName, time);
     }
 
     @Override
     public String getOrders(int customerId) {
-        return "";
+        return "abc";
     }
 
     @Override
     public String cancelOrder(int orderId) {
-        return "";
+        return "abc";
     }
 }

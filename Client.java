@@ -48,8 +48,8 @@ public class Client {
         return order;
     }
 
-    public String checkAvailability(String productName, int time) {
-        String availability = null;
+    public int checkAvailability(String productName, int time) {
+        int availability = 0;
         try {
             availability = server.checkAvailability(productName, time);
         } catch (Exception e) {
