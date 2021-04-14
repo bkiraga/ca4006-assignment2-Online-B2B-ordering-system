@@ -1,8 +1,22 @@
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class ClientMain {
+
+    public static int convertTimeStrToUnix(String timeStr) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm/dd/MM/yy");
+        try {
+            Date date = format.parse(timeStr);
+            Long timestamp = date.getTime()/1000;
+            return timestamp.intValue()/60;
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
     public static void main(String[] args) throws RemoteException, NotBoundException {
         Client client = new Client();
         client.startClient();
@@ -33,11 +47,13 @@ public class ClientMain {
                     System.out.println("Error: " + e.getMessage());
                 }
             }
-            if(command.matches("^order \\D+ \\d+ \\d+$")) {
+            //order {quantity} {time/day/month/year} eg: order laptop 2 12:00/27/12/21
+            if(command.matches("^order \\D+ \\d+ ([0-1][0-9]|[2][0-3]):[0-5][0-9]\\/(([0][1-9]|[1][0-9]|[2][0-8])\\/[0][2]|([0][1-9]|[1-2][1-9]|[3][0])\\/([0][4]|[0][6]|[0][9]|[1][1])|([0][1-9]|[1-2][1-9]|[3][0-1])\\/([0][1]|[0][3]|[0][5]|[0][7]|[0][8]|[1][0]|[1][2]))\\/[2][1-9]$")) {
                 try {
                     String productName = command.split(" ")[1];
                     int orderQuantity = Integer.parseInt(command.split(" ")[2]);
-                    int orderTime = Integer.parseInt(command.split(" ")[3]);
+                    String timeStr = command.split(" ")[3];
+                    int orderTime = convertTimeStrToUnix(timeStr);
                     String orderResponse = client.order(productName, orderQuantity, orderTime);
                     System.out.println(orderResponse);
                 } catch (Exception e) {
