@@ -40,6 +40,14 @@ public class ClientMain {
                     System.out.print("Error: " + e.getMessage());
                 }
             }
+            if(command.equalsIgnoreCase("logout")) {
+                try {
+                    String response = client.logout();
+                    System.out.println(response);
+                } catch(Exception e) {
+                    System.out.print("Error: " + e.getMessage());
+                }
+            }
             if(command.equalsIgnoreCase("getproducts")) {
                 try {
                     products = client.getProducts();

@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.ArrayList; 
 import java.util.Date;
 
@@ -8,12 +9,18 @@ public class DataStorage {
     HashMap<Integer, Order> orderList;
     HashMap<Integer, ArrayList<Order>> orderListByCustomer;
     HashMap<String, ArrayList<Order>> orderListByProduct;
+    ArrayBlockingQueue<TaskObject> taskQueue;
+    Thread consumerThread;
 
-    public DataStorage() {
+    public DataStorage(ArrayBlockingQueue<TaskObject> taskQueue) {
+        this.taskQueue = taskQueue;
         productList = new HashMap<String, Product>();
         orderList = new HashMap<Integer, Order>();
         orderListByCustomer = new HashMap<Integer, ArrayList<Order>>();
         orderListByProduct = new HashMap<String, ArrayList<Order>>();
+        //initialise consumer thread
+        consumerThread = new Thread(new ConsumerThread(taskQueue, this));
+        consumerThread.start();
     }
 
     public void addProduct(String productName, int quantity, int restockRate, int restockQuantity) {

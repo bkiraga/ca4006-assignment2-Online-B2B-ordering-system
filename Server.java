@@ -3,16 +3,23 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.concurrent.*;
 import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Server implements ServerInterface {
     DataStorage dataStorage;
-    HashMap<Integer, UserThread> userThreads;
-    ExecutorService userThreadPool;
+    HashMap<Integer, TaskThread> taskThreads;
+    ExecutorService taskThreadPool;
+    HashMap<Integer, Boolean> loggedInUsers;
+    ArrayBlockingQueue<TaskObject> taskQueue;
+
     public Server() throws RemoteException {
         UnicastRemoteObject.exportObject(this, 0);
-        dataStorage = new DataStorage();
-        userThreads = new HashMap<Integer, UserThread>();
-        userThreadPool = Executors.newFixedThreadPool(10);
+        taskQueue = new ArrayBlockingQueue<TaskObject>(10);
+        //pass queue to datastoreage
+        //pass queue to TaskThreads
+        dataStorage = new DataStorage(taskQueue);
+        taskThreads = new HashMap<Integer, TaskThread>();
+        taskThreadPool = Executors.newFixedThreadPool(10);
     }
 
     @Override
@@ -22,15 +29,30 @@ public class Server implements ServerInterface {
 
     @Override
     public String login(int customerId) {
-        UserThread loginThread = new UserThread(customerId);
-        userThreads.put(customerId, loginThread);
-        userThreadPool.execute(loginThread);
+        loggedInUsers.put(customerId, true);
         return "login successfull";
     }
 
     @Override
+    public Boolean getLoginStatus(int customerId) {
+        if(loggedInUsers.containsKey(customerId)){
+            return loggedInUsers.get(customerId);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String logout(int customerId) {
+        loggedInUsers.put(customerId, false);
+        return "logout successfull";
+    }
+
+    @Override
     public String order(int customerId, String productName, int orderQuantity, int orderTime) {
-        dataStorage.addOrder(customerId, productName, orderQuantity, orderTime);
+        TaskThread orderThread = new TaskThread(taskQueue, "order",customerId, productName, orderQuantity, orderTime);
+        taskThreadPool.execute(orderThread);
+        // dataStorage.addOrder(customerId, productName, orderQuantity, orderTime);
         return "order successfull";
     }
 
@@ -46,7 +68,9 @@ public class Server implements ServerInterface {
 
     @Override
     public String cancelOrder(int orderId) {
-        return dataStorage.cancelOrder(orderId);
-        // return "abc";
+        TaskThread cancelOrderThread = new TaskThread(taskQueue, "cancelorder", orderId);
+        taskThreadPool.execute(cancelOrderThread);
+        // return dataStorage.cancelOrder(orderId);
+        return "Order Cancelled";
     }
 }

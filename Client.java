@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Client {
     private ServerInterface server;
-    int customerId;
+    int customerId = 0;
     public Client() {}
 
     public void startClient() throws RemoteException, NotBoundException {
@@ -24,6 +24,32 @@ public class Client {
             throw new RuntimeException("Could not connect to server");
         }
         return response;
+    }
+
+    public String logout() {
+        String response = null;
+        if(this.customerId != 0) {
+            try {
+                response = server.logout(this.customerId);
+                this.customerId = 0;
+            } catch(RemoteException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Could not connect to server");
+            }
+        }
+        return response;
+    }
+
+    public boolean getLoginStatus(int customerId) {
+        if(this.customerId != 0) {
+            try {
+                return server.getLoginStatus(customerId);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Could not connect to server");
+            }
+        }
+        return false;
     }
 
     public String getProducts() {
