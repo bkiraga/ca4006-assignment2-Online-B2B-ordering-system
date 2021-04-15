@@ -6,13 +6,13 @@ import java.util.Date;
 public class DataStorage {
     HashMap<String, Product> productList;
     HashMap<Integer, Order> orderList;
-    HashMap<Integer, ArrayList<Order>> customerOrderList;
+    HashMap<Integer, ArrayList<Order>> orderListByCustomer;
     HashMap<String, ArrayList<Order>> orderListByProduct;
 
     public DataStorage() {
         productList = new HashMap<String, Product>();
         orderList = new HashMap<Integer, Order>();
-        customerOrderList = new HashMap<Integer, ArrayList<Order>>();
+        orderListByCustomer = new HashMap<Integer, ArrayList<Order>>();
         orderListByProduct = new HashMap<String, ArrayList<Order>>();
     }
 
@@ -22,19 +22,18 @@ public class DataStorage {
     }
 
     public String addOrder(int customerId, String productName, int quantity, int time) {
-        // String response = null;
         if(productList.containsKey(productName) && (availableProductNumber(productName, time) > 0)) {
             Order order = new Order(customerId, productName, quantity, time);
             orderList.put(order.orderId, order);
             ArrayList<Order> customerOrders;
-            if(customerOrderList.containsKey(customerId)) {
-                customerOrders = customerOrderList.get(customerId);
+            if(orderListByCustomer.containsKey(customerId)) {
+                customerOrders = orderListByCustomer.get(customerId);
                 customerOrders.add(order);
-                customerOrderList.put(customerId, customerOrders);
+                orderListByCustomer.put(customerId, customerOrders);
             } else {
                 customerOrders = new ArrayList<Order>();
                 customerOrders.add(order);
-                customerOrderList.put(customerId, customerOrders);
+                orderListByCustomer.put(customerId, customerOrders);
             }
             ArrayList<Order> productOrders;
             if(orderListByProduct.containsKey(productName)) {
@@ -52,9 +51,27 @@ public class DataStorage {
         }
     }
 
-    // public String cancelOrder(int ) {
-
-    // }
+    public String cancelOrder(int orderId) {
+        if(orderList.containsKey(orderId)) {
+            String product = orderList.get(orderId).productName;
+            int customerId = orderList.get(orderId).customerId;
+            orderList.remove(orderId);
+            ArrayList<Order> orderListByProductEntry = orderListByProduct.get(product);
+            for (int i = 0; i < orderListByProductEntry.size(); i++){
+                if(orderListByProductEntry.get(i).orderId == orderId) {
+                    orderListByProductEntry.remove(i);
+                }
+            }
+            ArrayList<Order> orderListByCustomerEntry = orderListByCustomer.get(customerId);
+            for (int i = 0; i < orderListByCustomerEntry.size(); i++){
+                if(orderListByCustomerEntry.get(i).orderId == orderId) {
+                    orderListByCustomerEntry.remove(i);
+                }
+            }
+            return "Order removed";
+        }
+        return "Order not found";
+    }
 
     public int availableProductNumber(String productName, int time) {
         Product product = productList.get(productName);
@@ -77,9 +94,9 @@ public class DataStorage {
 
     public String getOrders(int customerId) {
         String orders = "No orders found";
-        if(customerOrderList.containsKey(customerId)) {
+        if(orderListByCustomer.containsKey(customerId)) {
             orders = "My orders: " + "\n";
-            ArrayList<Order> orderList = customerOrderList.get(customerId);
+            ArrayList<Order> orderList = orderListByCustomer.get(customerId);
             for (int i = 0; i < orderList.size(); i++) {
                 orders += orderList.get(i).toString() + "\n";
             }

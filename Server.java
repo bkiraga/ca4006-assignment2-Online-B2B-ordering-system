@@ -30,8 +30,6 @@ public class Server implements ServerInterface {
 
     @Override
     public String order(int customerId, String productName, int orderQuantity, int orderTime) {
-        //find if id exists on the hashmap
-        //check if product exists check if quantity is possible at given time
         dataStorage.addOrder(customerId, productName, orderQuantity, orderTime);
         return "order successfull";
     }
@@ -44,11 +42,11 @@ public class Server implements ServerInterface {
     @Override
     public String getOrders(int customerId) {
         return dataStorage.getOrders(customerId);
-        // return null;
     }
 
     @Override
     public String cancelOrder(int orderId) {
-        return "abc";
+        return dataStorage.cancelOrder(orderId);
+        // return "abc";
     }
 }
