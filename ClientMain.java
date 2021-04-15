@@ -3,6 +3,7 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class ClientMain {
 
@@ -74,7 +75,7 @@ public class ClientMain {
             if(command.equalsIgnoreCase("myorders")) {
                 try {
                     myOrders = client.getOrders();
-                    System.out.println(myOrders); 
+                    System.out.println(myOrders);
                 } catch(Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }

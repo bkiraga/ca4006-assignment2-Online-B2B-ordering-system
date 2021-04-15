@@ -52,6 +52,10 @@ public class DataStorage {
         }
     }
 
+    // public String cancelOrder(int ) {
+
+    // }
+
     public int availableProductNumber(String productName, int time) {
         Product product = productList.get(productName);
         Date now = new Date();      
@@ -71,6 +75,17 @@ public class DataStorage {
         return product.quantity + restockAmount - productOrderTotal;
     }
 
+    public String getOrders(int customerId) {
+        String orders = "No orders found";
+        if(customerOrderList.containsKey(customerId)) {
+            orders = "My orders: " + "\n";
+            ArrayList<Order> orderList = customerOrderList.get(customerId);
+            for (int i = 0; i < orderList.size(); i++) {
+                orders += orderList.get(i).toString() + "\n";
+            }
+        }
+        return orders;
+    }
 
     public String displayAllProducts() {
         String products = "";

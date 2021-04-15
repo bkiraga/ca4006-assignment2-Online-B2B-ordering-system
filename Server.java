@@ -2,6 +2,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.concurrent.*;
+import java.util.ArrayList;
 
 public class Server implements ServerInterface {
     DataStorage dataStorage;
@@ -42,7 +43,8 @@ public class Server implements ServerInterface {
 
     @Override
     public String getOrders(int customerId) {
-        return "abc";
+        return dataStorage.getOrders(customerId);
+        // return null;
     }
 
     @Override
