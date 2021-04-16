@@ -28,7 +28,7 @@ public class DataStorage {
         productList.put(productName, product);
     }
 
-    public String addOrder(int customerId, String productName, int quantity, int time) {
+    public void addOrder(int customerId, String productName, int quantity, int time) {
         if(productList.containsKey(productName) && (availableProductNumber(productName, time) > 0)) {
             Order order = new Order(customerId, productName, quantity, time);
             orderList.put(order.orderId, order);
@@ -52,13 +52,10 @@ public class DataStorage {
                 productOrders.add(order);
                 orderListByProduct.put(productName, productOrders);
             }
-            return "Order Placed";
-        } else {
-            return "Cannot process order";
         }
     }
 
-    public String cancelOrder(int orderId) {
+    public void cancelOrder(int orderId) {
         if(orderList.containsKey(orderId)) {
             String product = orderList.get(orderId).productName;
             int customerId = orderList.get(orderId).customerId;
@@ -75,9 +72,7 @@ public class DataStorage {
                     orderListByCustomerEntry.remove(i);
                 }
             }
-            return "Order removed";
         }
-        return "Order not found";
     }
 
     public int availableProductNumber(String productName, int time) {

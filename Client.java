@@ -2,7 +2,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
 
 public class Client {
     private ServerInterface server;
@@ -27,7 +26,7 @@ public class Client {
     }
 
     public String logout() {
-        String response = null;
+        String response = "Already loggedout";
         if(this.customerId != 0) {
             try {
                 response = server.logout(this.customerId);
@@ -65,12 +64,14 @@ public class Client {
 
     public String order(String productName, int orderQuantity, int orderTime) {
         int customerId = this.customerId;
-        String order = null;
-        try {
-            order = server.order(customerId, productName, orderQuantity, orderTime);
-        } catch(Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Could not connect to server");
+        String order = "Login to order";
+        if (customerId != 0) {
+            try {
+                order = server.order(customerId, productName, orderQuantity, orderTime);
+            } catch(Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Could not connect to server");
+            }
         }
         return order;
     }
@@ -88,23 +89,28 @@ public class Client {
 
     public String getOrders() {
         int customerId = this.customerId;
-        String orders = null;
-        try {
-            orders = server.getOrders(customerId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Could not connect to server");
+        String orders = "Login to get orders";
+        if (customerId != 0) {
+            try {
+                orders = server.getOrders(customerId);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Could not connect to server");
+            }
         }
         return orders;
     }
 
     public String cancelOrder(int orderId) {
-        String response = null;
-        try {
-            response = server.cancelOrder(orderId);
-        } catch(Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Could not connect to server");
+        int customerId = this.customerId;
+        String response = "Login to cancel order";
+        if(customerId != 0) {
+            try {
+                response = server.cancelOrder(orderId);
+            } catch(Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Could not connect to server");
+            }
         }
         return response;
     }

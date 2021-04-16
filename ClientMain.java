@@ -3,7 +3,6 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 public class ClientMain {
 

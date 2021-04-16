@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.concurrent.*;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.Date;
 
 public class Server implements ServerInterface {
     DataStorage dataStorage;
@@ -14,9 +15,8 @@ public class Server implements ServerInterface {
 
     public Server() throws RemoteException {
         UnicastRemoteObject.exportObject(this, 0);
+        loggedInUsers = new HashMap<Integer, Boolean>();
         taskQueue = new ArrayBlockingQueue<TaskObject>(10);
-        //pass queue to datastoreage
-        //pass queue to TaskThreads
         dataStorage = new DataStorage(taskQueue);
         taskThreads = new HashMap<Integer, TaskThread>();
         taskThreadPool = Executors.newFixedThreadPool(10);
@@ -50,16 +50,25 @@ public class Server implements ServerInterface {
 
     @Override
     public String order(int customerId, String productName, int orderQuantity, int orderTime) {
-        TaskThread orderThread = new TaskThread(taskQueue, "order",customerId, productName, orderQuantity, orderTime);
-        taskThreadPool.execute(orderThread);
-        // dataStorage.addOrder(customerId, productName, orderQuantity, orderTime);
-        return "order successfull";
+        if(dataStorage.productList.containsKey(productName) && (dataStorage.availableProductNumber(productName, orderTime) > 0)) {
+            TaskThread orderThread = new TaskThread(taskQueue, "order",customerId, productName, orderQuantity, orderTime);
+            taskThreadPool.execute(orderThread);
+            // dataStorage.addOrder(customerId, productName, orderQuantity, orderTime);
+            return "order successfull";
+        }
+        return "order unsuccessfull";
     }
 
     @Override
     public int checkAvailability(String productName, int time) {
         return dataStorage.availableProductNumber(productName, time);
     }
+
+    // @Override int checkAvailabilityForsixMonths(String productName) {
+    //     Date now = new Date();      
+    //     Long timestamp = now.getTime()/1000;
+    //     int currentTime = timestamp.intValue()/60;
+    // }
 
     @Override
     public String getOrders(int customerId) {
@@ -68,9 +77,12 @@ public class Server implements ServerInterface {
 
     @Override
     public String cancelOrder(int orderId) {
-        TaskThread cancelOrderThread = new TaskThread(taskQueue, "cancelorder", orderId);
-        taskThreadPool.execute(cancelOrderThread);
-        // return dataStorage.cancelOrder(orderId);
-        return "Order Cancelled";
+        if(dataStorage.orderList.containsKey(orderId)) {
+            TaskThread cancelOrderThread = new TaskThread(taskQueue, "cancelorder", orderId);
+            taskThreadPool.execute(cancelOrderThread);
+            // return dataStorage.cancelOrder(orderId);
+            return "Order Cancelled";
+        }
+        return "Order not found";
     }
 }
