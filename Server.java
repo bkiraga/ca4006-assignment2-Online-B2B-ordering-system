@@ -53,7 +53,6 @@ public class Server implements ServerInterface {
         if(dataStorage.productList.containsKey(productName) && (dataStorage.availableProductNumber(productName, orderTime) > 0)) {
             TaskThread orderThread = new TaskThread(taskQueue, "order",customerId, productName, orderQuantity, orderTime);
             taskThreadPool.execute(orderThread);
-            // dataStorage.addOrder(customerId, productName, orderQuantity, orderTime);
             return "order successfull";
         }
         return "order unsuccessfull";
@@ -79,7 +78,6 @@ public class Server implements ServerInterface {
         if(dataStorage.orderList.containsKey(orderId)) {
             TaskThread cancelOrderThread = new TaskThread(taskQueue, "cancelorder", orderId);
             taskThreadPool.execute(cancelOrderThread);
-            // return dataStorage.cancelOrder(orderId);
             return "Order Cancelled";
         }
         return "Order not found";

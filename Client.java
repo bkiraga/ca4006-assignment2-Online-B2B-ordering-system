@@ -2,6 +2,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Random;
 
 public class Client {
     private ServerInterface server;
@@ -124,6 +125,58 @@ public class Client {
             }
         }
         return response;
+    }
+
+    //random tasks for test mode
+    public void randomTasks() {
+        Random random = new Random();
+        int id = random.nextInt(8000) + 1000;
+        int taskCount = random.nextInt(4) + 1;
+        int taskId = random.nextInt(4);
+        this.login(id);
+        for(int i = 0; i < taskCount; i++) {
+            try {
+                Thread.sleep(random.nextInt(5000) + 1000);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            if(taskId == 0) {
+                try {
+                    this.getOrders();
+                } catch( Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(taskId == 1) {
+                try {
+                    this.checkAvailabilityForSixMonths("laptop");
+                } catch( Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(taskId == 2) {
+                try {
+                    this.order("laptop", random.nextInt(1)+10, random.nextInt(30000000) + 27000000);
+                } catch( Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(taskId == 3) {
+                try {
+                    this.getProducts();
+                } catch( Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(taskId == 4) {
+                try {
+                    this.cancelOrder(random.nextInt(1000000) + 1000);
+                } catch( Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        this.logout();
     }
 
 }
