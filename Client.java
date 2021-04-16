@@ -87,6 +87,17 @@ public class Client {
         return availability;
     }
 
+    public String checkAvailabilityForSixMonths(String productName) {
+        String availability = null;
+        try {
+            availability = server.checkAvailabilityForSixMonths(productName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not connect to server");
+        }
+        return availability;
+    }
+
     public String getOrders() {
         int customerId = this.customerId;
         String orders = "Login to get orders";

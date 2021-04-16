@@ -3,6 +3,8 @@ import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.ArrayList; 
 import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class DataStorage {
     HashMap<String, Product> productList;
@@ -23,8 +25,8 @@ public class DataStorage {
         consumerThread.start();
     }
 
-    public void addProduct(String productName, int quantity, int restockRate, int restockQuantity) {
-        Product product  = new Product(productName, quantity, restockRate, restockQuantity);
+    public void addProduct(String productName, int quantity, int restockDate, int restockQuantity) {
+        Product product  = new Product(productName, quantity, restockDate, restockQuantity);
         productList.put(productName, product);
     }
 
@@ -91,7 +93,34 @@ public class DataStorage {
                 }
             }
         }
+        String orderDate = timeToDate(time);
+        if(Integer.parseInt(orderDate.split("/")[1]) >= product.restockDate) {
+            return product.quantity + restockAmount - productOrderTotal + product.restockQuantity;
+        }
         return product.quantity + restockAmount - productOrderTotal;
+    }
+
+    public String timeToDate(int time) {
+        long seconds = time * 60;
+        Date date = new Date(seconds * 1000L);
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm/dd/MM/yy");
+        format.setTimeZone(TimeZone.getTimeZone("GMT-0"));
+        String strTime = format.format(date);
+        return strTime;
+    }
+
+    public String displayProductAvailability(String productName) {
+        Date now = new Date();      
+        Long timestamp = now.getTime()/1000;
+        int time = timestamp.intValue()/60;
+        String result = "";
+        for(int i = 0; i < 6; i++) {
+            int productNumber = availableProductNumber(productName, time);
+            String date = timeToDate(time);
+            result += productName + ": " + productNumber + " available at " + date + "\n";
+            time += 43200;
+        }
+        return result;
     }
 
     public String getOrders(int customerId) {

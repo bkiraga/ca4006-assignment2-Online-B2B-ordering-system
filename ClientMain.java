@@ -74,7 +74,16 @@ public class ClientMain {
                     String timeStr = command.split(" ")[2];
                     int orderTime = convertTimeStrToUnix(timeStr);
                     int productAvailability = client.checkAvailability(productName, orderTime);
-                    System.out.println(productName + ": " + productAvailability + " available at: " + timeStr);
+                    System.out.println(productName + ": " + productAvailability + " available at " + timeStr);
+                } catch(Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+            }
+            if(command.matches("^availability \\D+$")) {
+                try {
+                    String productName = command.split(" ")[1];
+                    String productAvailability = client.checkAvailabilityForSixMonths(productName);
+                    System.out.println(productAvailability);
                 } catch(Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }

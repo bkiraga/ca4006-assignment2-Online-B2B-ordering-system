@@ -1,11 +1,14 @@
 import java.util.Date;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Main {
 
     //test file (not important to the project)
     public static void main(String[] args) {
-        // DataStorage ds = new DataStorage();
-        // ds.addProduct("laptop", 28, 5, 2);
+        ArrayBlockingQueue<TaskObject> taskQueue = new ArrayBlockingQueue<TaskObject>(10);
+        DataStorage ds = new DataStorage(taskQueue);
+        ds.addProduct("laptop", 28, 6, 2);
+        System.out.println(ds.displayProductAvailability("laptop"));
         // ds.addProduct("tv", 22, 7, 3);
         // ds.addProduct("ps4", 20, 3, 4);
         // ds.addProduct("xbox", 18, 3, 4);

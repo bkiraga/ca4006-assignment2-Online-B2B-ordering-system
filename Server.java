@@ -64,11 +64,10 @@ public class Server implements ServerInterface {
         return dataStorage.availableProductNumber(productName, time);
     }
 
-    // @Override int checkAvailabilityForsixMonths(String productName) {
-    //     Date now = new Date();      
-    //     Long timestamp = now.getTime()/1000;
-    //     int currentTime = timestamp.intValue()/60;
-    // }
+    @Override
+    public String checkAvailabilityForSixMonths(String productName) {
+        return dataStorage.displayProductAvailability(productName);
+    }
 
     @Override
     public String getOrders(int customerId) {
